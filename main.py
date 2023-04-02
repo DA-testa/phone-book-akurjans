@@ -14,21 +14,22 @@ def write_responses(result):
 
 def process_queries(queries):
     result = []
-    # Keep a dictionary of all existing (i.e., not deleted yet) contacts.
-    phone_book = {}
+    # Keep list of all existing (i.e. not deleted yet) contacts.
+    contacts = {}
     for cur_query in queries:
         if cur_query.type == 'add':
-            
-            phone_book[cur_query.number] = cur_query.name
+            contacts[cur_query.number] = cur_query.name
         elif cur_query.type == 'del':
-            
-            phone_book.pop(cur_query.number, None)
+            if contacts.get(cur_query.number) is not None:
+                contacts.pop(cur_query.number)
         else:
-            
-            response = phone_book.get(cur_query.number, 'not found')
+            response = 'not found'
+            if contacts.get(cur_query.number) is not None:
+                response = contacts[cur_query.number]
             result.append(response)
     return result
 
 if __name__ == '__main__':
     write_responses(process_queries(read_queries()))
+
 
